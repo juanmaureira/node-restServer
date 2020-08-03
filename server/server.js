@@ -1,49 +1,25 @@
 require('./config/config.js');
 
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 const bodyParser = require('body-parser')
 
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
- 
-// parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(require('./controlador/usuario'));
 
-app.get('/usuario', function (req, res) {
-  res.json('get usuario');
-});
- 
-app.post('/usuario', function (req, res) {
-  let body = req.body;
-
-  if(body.nombre === undefined){
-    res.status(400).json({
-      ok: false,
-      mensaje: 'El nombre es necesario'
-    });
-  }
-
-  res.json({
-    persona: body
-  });
-});
-
-app.put('/usuario/:id', function (req, res) {
-  let id = req.params.id;
-  res.json({
-    id
-  });
-});
-
-app.patch('/usuario', function (req, res) {
-  res.json('patch usuario');
-});
-
-app.delete('/usuario', function (req, res) {
-  res.json('delete usuario');
+mongoose.connect(process.env.URLDB, {useUnifiedTopology:true,  useNewUrlParser: true, useCreateIndex: true }, (e, resp) => {
+  if(e) throw e;
+  console.log('Base de datos online');
 });
 
 app.listen(process.env.PORT, () => {
   console.log('Escuchando en puerto 3000');
 });
+
+// user: juanmaureira
+// pass: 21363660
+// Mongo db URL
+// Base de datos en la nube (mLab): mongodb+srv://juanmaureira:21363660@cluster0.g9a6z.mongodb.net/cafe
+// Base de datos local:  mongodb://localhost:27017/cafe
